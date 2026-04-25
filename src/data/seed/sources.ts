@@ -1,6 +1,6 @@
 import type { SourceRef } from "@/types/domain";
 
-export const DATA_AS_OF = "2026-04-24T12:55:00-05:00";
+export const DATA_AS_OF = "2026-04-25T02:32:16-05:00";
 
 export const sources = {
   nflDraftInfo: {
@@ -13,7 +13,13 @@ export const sources = {
     label: "NFL 2026 draft order",
     url: "https://www.nfl.com/news/2026-nfl-draft-order-for-all-seven-rounds",
     retrievedAt: DATA_AS_OF,
-    note: "Raiders Day 2 picks verified at Nos. 36 and 67.",
+    note: "Initial full draft order source; live tracker supersedes it once picks are made and trades update slots.",
+  },
+  nflRaidersDraftTracker: {
+    label: "NFL Raiders draft tracker",
+    url: "https://www.nfl.com/draft/tracker/2026/teams/las-vegas-raiders",
+    retrievedAt: DATA_AS_OF,
+    note: "Live Raiders tracker verified picks made at Nos. 1, 38, 67, and 91, with No. 102 next.",
   },
   raidersMendoza: {
     label: "Raiders Fernando Mendoza selection",
@@ -56,6 +62,12 @@ export const sources = {
     url: "https://www.nfl.com/news/2026-nfl-draft-day-2-day-3-prospects-to-watch",
     retrievedAt: DATA_AS_OF,
     note: "Public fallback prospect pool for available Day 2 and Day 3 targets.",
+  },
+  nflUndraftedProspects: {
+    label: "NFL undrafted prospect tracker",
+    url: "https://www.nfl.com/draft/tracker/2026/prospects/all_all?collegeClass=all&page=1&status=undrafted",
+    retrievedAt: DATA_AS_OF,
+    note: "Live NFL prospect tracker filtered to undrafted players after Rounds 1-3.",
   },
   autumnwindBrief: {
     label: "Raiders analytics brief",

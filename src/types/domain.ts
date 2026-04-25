@@ -99,6 +99,8 @@ export const prospectSchema = z.object({
   traits: z.array(z.string().min(1)).min(1),
   sourceRefs: z.array(sourceRefSchema).min(1),
   status: z.enum(["available", "drafted"]).default("available"),
+  draftedOverall: z.number().int().positive().optional(),
+  draftedTeam: z.string().min(1).optional(),
 });
 
 export type Prospect = z.infer<typeof prospectSchema>;

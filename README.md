@@ -4,6 +4,8 @@ Current-state draft-room decision support for the Las Vegas Raiders.
 
 Raiders Depth Fragility ranks each Raiders position group by how much the current scheme would break if a starter or primary role player were unavailable, then overlays the 2026 draft class to identify prospects who reduce that fragility at the team's active picks.
 
+Live app: https://raiders-depth-fragility.vercel.app
+
 The central question is:
 
 > Who should the Raiders consider next because he most reduces current Super Bowl-limiting fragility?
@@ -27,7 +29,7 @@ The central question is:
 ## Product constraints
 
 - Fernando Mendoza is treated as already drafted by Las Vegas at No. 1 overall.
-- The active decision window emphasizes Raiders picks No. 36 and No. 67.
+- The active decision window starts at the next live Raiders pick, currently No. 102, after made picks at Nos. 1, 38, 67, and 91.
 - The official Raiders depth chart is unavailable until Fall 2026, so depth order is inferred and clearly marked with confidence warnings.
 - NFL IQ is used as the primary conceptual source, but the app does not depend on an unsupported NFL IQ API.
 - `NO_SEASON_MODE` is an explicit code and test invariant.
@@ -104,8 +106,8 @@ The current test suite covers:
 - High-dependency starter fragility.
 - Center fragility reduction from C/G swing coverage.
 - Lower-board prospects outranking higher-board prospects when they reduce higher Raiders fragility.
-- Mendoza already being drafted.
-- Raiders Day 2 starting at No. 36 and including No. 67.
+- Mendoza, Stukes, Crawford, and Zuhn already being drafted by Las Vegas.
+- The live Raiders board starting with upcoming picks No. 102, No. 134, and No. 175.
 - Official depth chart absence producing confidence warnings.
 - Manual CSV import validation.
 - Current-roster-only product mode.

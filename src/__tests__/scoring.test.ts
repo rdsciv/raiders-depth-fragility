@@ -136,14 +136,24 @@ describe("fragility scoring", () => {
 });
 
 describe("draft and import invariants", () => {
-  it("treats Mendoza as drafted and starts Raiders Day 2 at pick 36", () => {
+  it("treats made Raiders picks as drafted and starts the live window at pick 102", () => {
     const mendoza = seedData.prospects.find((entry) => entry.name === "Fernando Mendoza");
+    const stukes = seedData.prospects.find((entry) => entry.name === "Treydan Stukes");
+    const crawford = seedData.prospects.find((entry) => entry.name === "Keyron Crawford");
+    const zuhn = seedData.prospects.find((entry) => entry.name === "Trey Zuhn III");
     const upcoming = seedData.focusPicks.map((pick) => pick.overall);
+    const made = seedData.draftPicks
+      .filter((pick) => pick.status === "made")
+      .map((pick) => pick.overall);
 
     expect(mendoza?.status).toBe("drafted");
-    expect(availabilityAtPick(mendoza!, 36)).toBe(0);
-    expect(upcoming[0]).toBe(36);
-    expect(upcoming).toContain(67);
+    expect(stukes?.draftedOverall).toBe(38);
+    expect(crawford?.draftedOverall).toBe(67);
+    expect(zuhn?.draftedOverall).toBe(91);
+    expect(availabilityAtPick(mendoza!, 102)).toBe(0);
+    expect(made).toEqual([1, 38, 67, 91]);
+    expect(upcoming[0]).toBe(102);
+    expect(upcoming).toContain(134);
   });
 
   it("shows official depth chart absence as a source confidence warning", () => {
@@ -201,9 +211,11 @@ describe("draft and import invariants", () => {
       targetPicks: seedData.focusPicks,
     });
 
-    expect(positions[0].positionGroup).toBe("EDGE");
-    expect(prospects[0].bestScore.total).toBeGreaterThan(30);
-    expect(prospects.every((entry) => entry.prospect.name !== "Fernando Mendoza")).toBe(true);
+    expect(positions[0].positionGroup).toBe("OT");
+    expect(prospects[0].bestScore.total).toBeGreaterThan(20);
+    expect(
+      prospects.every((entry) => entry.prospect.status === "available"),
+    ).toBe(true);
   });
 
   it("surfaces parsed CSV prospects in rankProspectsForPicks output alongside seed prospects", () => {

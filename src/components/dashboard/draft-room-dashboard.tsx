@@ -134,7 +134,7 @@ export function DraftRoomDashboard({
     positions[0]?.positionGroup ?? "EDGE",
   );
   const [minimumScore, setMinimumScore] = useState(0);
-  const [pickFilter, setPickFilter] = useState<"best" | "36" | "67">("best");
+  const [pickFilter, setPickFilter] = useState("best");
   const [csv, setCsv] = useState(
     `${prospectCsvTemplate}\nKendall Daniels,Oklahoma State,S,S,88,146,119,74,78,80,0.58,"box safety|teams floor|dime utility",https://www.nfl.com/draft/`,
   );
@@ -147,6 +147,13 @@ export function DraftRoomDashboard({
   const allProspects = useMemo(
     () => [...seedProspects, ...csvResult.prospects],
     [seedProspects, csvResult.prospects],
+  );
+  const draftedProspects = useMemo(
+    () =>
+      seedProspects
+        .filter((prospect) => prospect.status === "drafted")
+        .sort((a, b) => (a.draftedOverall ?? 999) - (b.draftedOverall ?? 999)),
+    [seedProspects],
   );
 
   const prospects = useMemo(
@@ -462,7 +469,7 @@ export function DraftRoomDashboard({
                   <select
                     className="border border-white/10 bg-[#0f1115] px-2 py-1 text-white"
                     value={pickFilter}
-                    onChange={(event) => setPickFilter(event.target.value as "best" | "36" | "67")}
+                    onChange={(event) => setPickFilter(event.target.value)}
                   >
                     <option value="best">Best available pick</option>
                     {focusPicks.map((pick) => (
@@ -535,6 +542,43 @@ export function DraftRoomDashboard({
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        </section>
+
+        <section className="border border-white/10 bg-[#12151b]">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
+            <div className="text-sm font-semibold uppercase tracking-[0.14em]">
+              Current Draft Results
+            </div>
+            <div className="font-mono text-xs text-[#8f9baa]">
+              {draftedProspects.length} tracked prospects unavailable
+            </div>
+          </div>
+          <div className="grid gap-3 p-4 md:grid-cols-2 xl:grid-cols-4">
+            {madePicks.map((pick) => (
+              <div key={pick.overall} className="border border-white/10 p-3">
+                <div className="font-mono text-xs text-[#8ea3bd]">
+                  R{pick.round} #{pick.overall}
+                </div>
+                <div className="mt-2 text-sm font-semibold text-white">{pick.selection}</div>
+                <div className="mt-2 text-[11px] uppercase tracking-[0.16em] text-[#7f8b9a]">
+                  Las Vegas selection
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-white/10 px-4 py-3">
+            <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-[#8f9baa]">
+              Removed from overlay
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {draftedProspects.map((prospect) => (
+                <span key={prospect.name} className="border border-white/10 px-2 py-1 text-xs text-[#c8d0db]">
+                  #{prospect.draftedOverall ?? "--"} {prospect.name}
+                  {prospect.draftedTeam ? `, ${prospect.draftedTeam}` : ""}
+                </span>
+              ))}
             </div>
           </div>
         </section>

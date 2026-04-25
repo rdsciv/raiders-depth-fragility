@@ -2,7 +2,13 @@ import type { DepthAssessment, RosterPlayer, SchemeRole } from "@/types/domain";
 import { sources } from "./sources";
 
 const rosterRefs = [sources.raidersRoster];
-const depthRefs = [sources.raidersRoster, sources.raidersDepthChart, sources.nflIqLaunch];
+const draftRefs = [sources.nflRaidersDraftTracker];
+const depthRefs = [
+  sources.raidersRoster,
+  sources.raidersDepthChart,
+  sources.nflIqLaunch,
+  sources.nflRaidersDraftTracker,
+];
 const schemeRefs = [sources.raidersCoaches, sources.nflIqLaunch, sources.autumnwindBrief];
 
 export const rosterPlayers: RosterPlayer[] = [
@@ -167,6 +173,16 @@ export const rosterPlayers: RosterPlayer[] = [
     sourceRefs: rosterRefs,
   },
   {
+    name: "Keyron Crawford",
+    position: "EDGE",
+    positionGroup: "EDGE",
+    positionFlex: ["Stand-up rush", "Special teams"],
+    age: null,
+    experience: "R",
+    college: "Auburn",
+    sourceRefs: draftRefs,
+  },
+  {
     name: "Malcolm Koonce",
     position: "DE",
     positionGroup: "EDGE",
@@ -285,6 +301,26 @@ export const rosterPlayers: RosterPlayer[] = [
     experience: "5",
     college: "USC",
     sourceRefs: rosterRefs,
+  },
+  {
+    name: "Treydan Stukes",
+    position: "S",
+    positionGroup: "S",
+    positionFlex: ["Big nickel", "Split safety", "Special teams"],
+    age: null,
+    experience: "R",
+    college: "Arizona",
+    sourceRefs: draftRefs,
+  },
+  {
+    name: "Trey Zuhn III",
+    position: "C",
+    positionGroup: "IOL/C",
+    positionFlex: ["C", "G", "Emergency T"],
+    age: null,
+    experience: "R",
+    college: "Texas A&M",
+    sourceRefs: draftRefs,
   },
   {
     name: "AJ Cole",
@@ -462,7 +498,7 @@ export const depthAssessments: DepthAssessment[] = [
     crossTrainingCoverage: 30,
     depthDropoff: 40,
     confidence: 0.54,
-    whatBreaks: "The tool treats Mendoza as already drafted, so Day 2 QB value is suppressed unless the room wants a redundant emergency investment.",
+    whatBreaks: "The tool treats Mendoza as already drafted, so remaining QB value is suppressed unless the room wants a redundant emergency investment.",
     sourceRefs: depthRefs,
   },
   {
@@ -512,23 +548,23 @@ export const depthAssessments: DepthAssessment[] = [
   {
     positionGroup: "IOL/C",
     starter: "Tyler Linderbaum",
-    backups: ["Jackson Powers-Johnson", "Jordan Meredith", "Spencer Burford"],
-    crossTrainedPlayers: ["Jackson Powers-Johnson at C/G", "Jordan Meredith at C/G"],
-    crossTrainingCoverage: 24,
-    depthDropoff: 44,
-    confidence: 0.58,
-    whatBreaks: "Center is scheme-critical, but credible C/G flex keeps this below the top fragility tier unless injuries stack.",
+    backups: ["Jackson Powers-Johnson", "Trey Zuhn III", "Jordan Meredith", "Spencer Burford"],
+    crossTrainedPlayers: ["Jackson Powers-Johnson at C/G", "Trey Zuhn III at C/G with emergency T history", "Jordan Meredith at C/G"],
+    crossTrainingCoverage: 30,
+    depthDropoff: 36,
+    confidence: 0.62,
+    whatBreaks: "Center is scheme-critical, but the No. 91 Trey Zuhn III pick adds another C/G emergency bridge and reduces single-injury fragility.",
     sourceRefs: depthRefs,
   },
   {
     positionGroup: "EDGE",
     starter: "Maxx Crosby / Malcolm Koonce",
-    backups: ["Kwity Paye", "Tyree Wilson", "Jahfari Harvey"],
-    crossTrainedPlayers: ["Kwity Paye can reduce inside on pass downs"],
-    crossTrainingCoverage: 12,
-    depthDropoff: 62,
+    backups: ["Kwity Paye", "Tyree Wilson", "Keyron Crawford", "Jahfari Harvey"],
+    crossTrainedPlayers: ["Kwity Paye can reduce inside on pass downs", "Keyron Crawford adds situational rush and special teams value"],
+    crossTrainingCoverage: 15,
+    depthDropoff: 58,
     confidence: 0.6,
-    whatBreaks: "If Crosby is out, the defense loses its cleanest four-man pressure path and must expose coverage with blitzes.",
+    whatBreaks: "If Crosby is out, the defense still loses its cleanest four-man pressure path, but the No. 67 Keyron Crawford pick adds a developmental rush hedge.",
     sourceRefs: depthRefs,
   },
   {
@@ -567,12 +603,12 @@ export const depthAssessments: DepthAssessment[] = [
   {
     positionGroup: "S",
     starter: "Jeremy Chinn / Isaiah Pola-Mao",
-    backups: ["Terrell Edmunds", "Tristin McCollum"],
-    crossTrainedPlayers: ["Jeremy Chinn box/nickel", "Taron Johnson nickel safety rotations"],
-    crossTrainingCoverage: 20,
-    depthDropoff: 52,
-    confidence: 0.52,
-    whatBreaks: "The defense can survive one safety injury, but TE matchups and late rotations get narrower.",
+    backups: ["Treydan Stukes", "Terrell Edmunds", "Tristin McCollum"],
+    crossTrainedPlayers: ["Jeremy Chinn box/nickel", "Treydan Stukes as big nickel or split safety", "Taron Johnson nickel safety rotations"],
+    crossTrainingCoverage: 27,
+    depthDropoff: 42,
+    confidence: 0.58,
+    whatBreaks: "The No. 38 Treydan Stukes pick gives the defense a real big-nickel and split-safety cushion, so safety is less urgent than it was before Day 2.",
     sourceRefs: depthRefs,
   },
   {
