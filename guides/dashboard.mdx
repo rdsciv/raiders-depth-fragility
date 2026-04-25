@@ -1,0 +1,85 @@
+---
+title: "Use the dashboard"
+description: "How to read the fragility board, position detail panel, prospect overlay, and source confidence surfaces."
+---
+
+The dashboard is the first screen of the app. It is not a landing page. It is built for a current draft-room decision.
+
+## Header
+
+The header shows the operating context:
+
+- The data timestamp.
+- The `Current roster only` invariant.
+- The already-made Mendoza pick.
+- The active decision window for Raiders picks No. 36 and No. 67.
+
+If those facts change, update the seed files in `src/data/seed/` and rerun verification.
+
+## Fragility board
+
+The left board ranks each position group by total fragility score. Higher scores mean the team is more likely to lose scheme functionality if the starter or primary role player is unavailable.
+
+Each row shows:
+
+| Field | Meaning |
+| --- | --- |
+| Rank | Sorted order by total fragility score |
+| Position group | One of the fixed current-roster groups |
+| Role label | The scheme role being protected |
+| Bar | Relative score magnitude |
+| Total | Weighted deterministic fragility score |
+
+Click a row to update the position detail panel.
+
+## Position detail
+
+The detail panel explains why a position is fragile or cushioned.
+
+It includes:
+
+- Starter or starting role group.
+- Backups.
+- Cross-trained players who reduce emergency risk.
+- Score components.
+- The specific failure mode under `What breaks`.
+- Source links.
+- Confidence label.
+
+<Warning>
+The official Raiders depth chart is not available until Fall 2026. The app surfaces this as a confidence warning instead of pretending the inferred depth order is official.
+</Warning>
+
+## Recommendation panel
+
+The recommendation panel gives four views of the same scored prospect set:
+
+| Recommendation | What it answers |
+| --- | --- |
+| Best pick for Super Bowl leverage | Highest current fragility reduction value |
+| Best fragility hedge | Highest raw fragility reduction before pick-specific opportunity cost |
+| Best scheme fit | Strongest role fit against the current Raiders scheme |
+| Avoid despite board value | A good consensus-board player whose current Raiders fragility value is lower |
+
+Use this panel to start the conversation. Use the prospect table to inspect the math.
+
+## Prospect overlay
+
+The prospect overlay compares available prospects at each focus pick.
+
+Each row shows:
+
+- Prospect name, school, and position.
+- Role-fit score for the matching position group.
+- Fit score at pick No. 36.
+- Fit score at pick No. 67.
+- Availability estimate.
+- Trait tags.
+
+Use the pick filter to see the recommendation set for a specific pick. Use the minimum FRV slider to hide low-impact prospects.
+
+## Data workbench
+
+The workbench previews manual NFL IQ prospect rows through CSV. It validates the row shape, parses traits, and reports errors before any data is used.
+
+This is intentionally a preview path. To make imported rows part of the main dashboard, convert validated rows into seed data or add a persisted import flow.

@@ -1,0 +1,74 @@
+---
+title: "Prospect fit scoring"
+description: "How available prospects are mapped to Raiders fragility at picks No. 36 and No. 67."
+---
+
+Prospect fit scoring maps an available player to a fragile Raiders position group and a specific target pick.
+
+It answers:
+
+> How much current Raiders fragility does this prospect reduce at this pick?
+
+## Formula
+
+```text
+ProspectFitScore.total =
+  fragilityScore
+* roleFit
+* readiness
+* availabilityAtPick
+* nflIqSignal
+- opportunityCost
+```
+
+## Components
+
+| Component | Scale | Meaning |
+| --- | --- | --- |
+| `fragilityScore` | number | Current fragility score for the prospect's position group |
+| `roleFit` | 0 to 1 | How directly the prospect's traits protect the scheme role |
+| `readiness` | 0 to 1 | How likely the prospect is to help in the current roster window |
+| `availabilityAtPick` | 0 to 1 | Pick-specific availability estimate |
+| `nflIqSignal` | 0 to 1 | `nflIqOverall / 100` |
+| `opportunityCost` | number | Penalty for reaching or misusing the board |
+
+## Availability buckets
+
+The current implementation uses deterministic buckets:
+
+| Condition | Availability |
+| --- | --- |
+| Prospect already drafted | `0` |
+| Pick is before projected range | `0.96` |
+| Pick is inside projected range | `0.82` |
+| Pick is within 20 slots after range | `0.36` |
+| Pick is later than that | `0.12` |
+
+## Opportunity cost
+
+Opportunity cost penalizes two draft-room risks:
+
+- Taking a player earlier than his projected range.
+- Taking a player far below the target pick on the consensus board.
+
+It does not remove a prospect from the board unless the prospect is already drafted.
+
+## Fragility reduction
+
+The model also exposes raw fragility reduction:
+
+```text
+fragilityReduction = fragilityScore.total * roleFit * readiness
+```
+
+This value ignores availability and board cost. It powers the `Best fragility hedge` recommendation.
+
+## Why the model can disagree with a big board
+
+A prospect with a lower consensus rank can score higher when he solves a more dangerous Raiders-specific failure mode. That is expected behavior.
+
+Example:
+
+- A corner with nickel leverage and match-zone instincts may reduce CB fragility.
+- A higher-board tight end may be a better player in isolation.
+- If TE depth is already cushioned and CB is not, the corner can be the better Raiders pick.

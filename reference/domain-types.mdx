@@ -1,0 +1,143 @@
+---
+title: "Domain types"
+description: "Reference for the core Zod schemas and TypeScript models."
+---
+
+All domain types live in:
+
+```text
+src/types/domain.ts
+```
+
+## PositionGroup
+
+Supported groups:
+
+```text
+QB, RB, WR, TE, OT, IOL/C, EDGE, IDL, LB, CB, S, ST
+```
+
+These are fixed because the app is a current Raiders roster tool, not a generic roster builder.
+
+## SourceRef
+
+```ts
+type SourceRef = {
+  label: string;
+  url: string;
+  retrievedAt: string;
+  note?: string;
+};
+```
+
+Use `SourceRef` on every seed row that depends on public or local source material.
+
+## RosterPlayer
+
+```ts
+type RosterPlayer = {
+  name: string;
+  position: string;
+  positionGroup: PositionGroup;
+  positionFlex: string[];
+  age: number | null;
+  experience: string;
+  college: string;
+  sourceRefs: SourceRef[];
+};
+```
+
+Roster data describes official roster identity and flexible role capability. It does not declare official depth order.
+
+## SchemeRole
+
+```ts
+type SchemeRole = {
+  id: string;
+  label: string;
+  positionGroup: PositionGroup;
+  schemeTraits: string[];
+  dependencyScore: number;
+  starterLeverage: number;
+  replacementScarcity: number;
+  failureModes: string[];
+  sourceRefs: SourceRef[];
+};
+```
+
+Scheme roles describe what the Raiders need each position group to preserve.
+
+## DepthAssessment
+
+```ts
+type DepthAssessment = {
+  positionGroup: PositionGroup;
+  starter: string;
+  backups: string[];
+  crossTrainedPlayers: string[];
+  crossTrainingCoverage: number;
+  depthDropoff: number;
+  confidence: number;
+  whatBreaks: string;
+  sourceRefs: SourceRef[];
+};
+```
+
+Depth assessments are inferred until an official depth chart exists.
+
+## Prospect
+
+```ts
+type Prospect = {
+  name: string;
+  school: string;
+  position: string;
+  positionGroup: PositionGroup;
+  projectedRange: { min: number; max: number };
+  consensusRank: number | null;
+  nflIqOverall: number;
+  athleticism: number;
+  production: number;
+  readiness: number;
+  roleFits: Partial<Record<PositionGroup, number>>;
+  traits: string[];
+  sourceRefs: SourceRef[];
+  status: "available" | "drafted";
+};
+```
+
+Prospects can fit more than one position group through `roleFits`, but the main recommendation flow uses the prospect's primary `positionGroup`.
+
+## Score models
+
+```ts
+type FragilityScore = {
+  positionGroup: PositionGroup;
+  schemeDependency: number;
+  starterLeverage: number;
+  depthDropoff: number;
+  crossTrainingCushion: number;
+  replacementScarcity: number;
+  confidence: number;
+  total: number;
+  rationale: string;
+  sourceRefs: SourceRef[];
+};
+```
+
+```ts
+type ProspectFitScore = {
+  prospectName: string;
+  positionGroup: PositionGroup;
+  targetPick: number;
+  roleFit: number;
+  readiness: number;
+  nflIqSignal: number;
+  availabilityAtPick: number;
+  fragilityReduction: number;
+  opportunityCost: number;
+  total: number;
+  rationale: string;
+  sourceRefs: SourceRef[];
+};
+```

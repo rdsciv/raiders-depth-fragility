@@ -1,0 +1,54 @@
+---
+title: "Raiders Depth Fragility"
+description: "Documentation for the current-roster Raiders draft-room tool that ranks scheme fragility and maps prospects to injury-resilience value."
+---
+
+Raiders Depth Fragility is a draft-room decision support app for one question:
+
+> Who should the Raiders consider next because he most reduces current Super Bowl-limiting fragility?
+
+The app does not try to replace scouting grades or a consensus board. It adds a roster-specific layer: if a starter goes down, which position groups lose the ability to execute the current Raiders scheme, and which available prospects most reduce that failure risk?
+
+<Warning>
+This project is intentionally current-state only. There is no season selector, historical mode, or generic big-board workflow.
+</Warning>
+
+## What the tool ranks
+
+The app produces two linked rankings.
+
+<Columns cols={2}>
+  <Card title="Position fragility" icon="activity" href="/model/fragility-scoring">
+    Ranks QB, RB, WR, TE, OT, IOL/C, EDGE, IDL, LB, CB, S, and ST by scheme dependency, depth dropoff, starter leverage, replacement scarcity, and cross-training cushion.
+  </Card>
+  <Card title="Prospect fit" icon="target" href="/model/prospect-fit">
+    Scores available prospects at Raiders picks No. 36 and No. 67 by how much they reduce the team's highest practical fragility.
+  </Card>
+</Columns>
+
+## Current facts encoded in the build
+
+The seed data is timestamped at `2026-04-24T12:55:00-05:00` and uses public source references embedded in every row.
+
+- Day 2 of the 2026 NFL Draft is April 24, 2026.
+- Fernando Mendoza is treated as already drafted by Las Vegas at No. 1 overall.
+- The active decision window emphasizes Raiders picks No. 36 and No. 67.
+- The official Raiders depth chart is unavailable until Fall 2026, so depth order is inferred and shown with confidence warnings.
+- NFL IQ is treated as the primary conceptual source, with a manual CSV path for values that are visible to a user but not available through a stable public API.
+
+## Start here
+
+<Columns cols={2}>
+  <Card title="Run the app" icon="play" href="/quickstart">
+    Install dependencies, start the Next.js dashboard, and run the verification commands.
+  </Card>
+  <Card title="Use the dashboard" icon="layout-dashboard" href="/guides/dashboard">
+    Read the fragility board, position detail panel, prospect overlay, and source-confidence warnings.
+  </Card>
+  <Card title="Understand the model" icon="calculator" href="/model/fragility-scoring">
+    See the deterministic scoring formula and how each component affects the board.
+  </Card>
+  <Card title="Change the data" icon="database" href="/guides/csv-import">
+    Add or preview NFL IQ prospect rows through the CSV workbench without changing scoring code.
+  </Card>
+</Columns>

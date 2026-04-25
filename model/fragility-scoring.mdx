@@ -1,0 +1,70 @@
+---
+title: "Fragility scoring"
+description: "The deterministic formula that ranks Raiders position groups by scheme fragility."
+---
+
+Fragility scoring estimates how much the Raiders lose if a starter or primary role player becomes unavailable.
+
+The implementation is in:
+
+```text
+src/lib/scoring/fragility.ts
+```
+
+## Formula
+
+```text
+FragilityScore.total =
+  0.35 * schemeDependency
++ 0.30 * depthDropoff
++ 0.20 * starterLeverage
++ 0.15 * replacementScarcity
+- crossTrainingCushion
+```
+
+The total is rounded to one decimal and clamped at zero.
+
+## Components
+
+| Component | Scale | Meaning |
+| --- | --- | --- |
+| `schemeDependency` | 0 to 100 | How much the current scheme depends on that role |
+| `depthDropoff` | 0 to 100 | How far the team falls if the starter is unavailable |
+| `starterLeverage` | 0 to 100 | How much one player or role controls the position group |
+| `replacementScarcity` | 0 to 100 | How hard it is to replace that role in the current market or draft |
+| `crossTrainingCushion` | 0 to 40 | Credit for credible flex players or emergency role coverage |
+
+## Why cross-training is subtracted
+
+The tool is built around the idea that a team can reduce fragility without always drafting the nominal position. A guard who can survive at center can reduce center fragility. A safety who can play dime linebacker can reduce linebacker fragility. A tackle who can cover both sides reduces OT fragility.
+
+That cushion is subtracted because it protects the scheme from a single-point failure.
+
+## Example
+
+```ts
+const rawTotal =
+  0.35 * role.dependencyScore +
+  0.3 * depth.depthDropoff +
+  0.2 * role.starterLeverage +
+  0.15 * role.replacementScarcity -
+  depth.crossTrainingCoverage;
+```
+
+## What high scores mean
+
+A high score means all or most of these are true:
+
+- The role is central to the current Raiders scheme.
+- The starter carries unusual leverage.
+- The backups do not preserve the same traits.
+- Similar players are scarce.
+- Cross-trained alternatives are limited.
+
+## What low scores mean
+
+A lower score does not mean a position is unimportant. It means the roster has more ways to survive an injury there, or the scheme can redistribute the workload without changing its identity.
+
+<Warning>
+Do not compare scores across seasons or staffs. The app has no season mode by design.
+</Warning>

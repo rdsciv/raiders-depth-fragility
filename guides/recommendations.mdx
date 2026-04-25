@@ -1,0 +1,66 @@
+---
+title: "Interpret recommendations"
+description: "How to use the recommendation panel without confusing fragility value for a full scouting grade."
+---
+
+Recommendations are not a replacement for scouting, medical, character, or trade value work. They answer a narrower question: which available prospect most reduces current Raiders scheme fragility at the active picks?
+
+## Recommended use
+
+Use the ranking as a second board beside the room's scouting board:
+
+<Steps>
+  <Step title="Start from the highest fragility groups">
+    Identify which positions would most damage the call sheet if a starter were unavailable.
+  </Step>
+  <Step title="Check the prospect overlay">
+    Look for players whose traits match those specific failure modes.
+  </Step>
+  <Step title="Compare against the scouting board">
+    A high fragility score should elevate a player within a tier, not erase scouting risk.
+  </Step>
+  <Step title="Pressure-test the opportunity cost">
+    If a prospect is projected to be available later, the model subtracts a reach penalty.
+  </Step>
+</Steps>
+
+## Why a lower-ranked prospect can win
+
+A lower consensus prospect can outrank a higher consensus prospect when all of these are true:
+
+- The Raiders are more fragile at the lower-ranked player's position.
+- The player has a better role fit for that specific failure mode.
+- The player is likely enough to be available at the target pick.
+- The player has enough readiness to matter during the current roster window.
+
+This is the core idea of the tool. The highest big-board player is not always the highest current team leverage player.
+
+## What each recommendation means
+
+### Best pick for Super Bowl leverage
+
+The prospect with the highest final `ProspectFitScore.total`.
+
+Use this when the room wants the best single answer to current fragility.
+
+### Best fragility hedge
+
+The prospect with the highest raw `fragilityReduction`.
+
+Use this when the room cares more about protecting a fragile scheme function than about pick-specific board cost.
+
+### Best scheme fit
+
+The prospect with the highest `roleFit`.
+
+Use this when the scouting staff believes several players are similarly graded and wants the cleanest schematic translation.
+
+### Avoid despite board value
+
+A player with strong public board value but low Raiders-specific fragility value.
+
+Use this to challenge automatic "best player available" thinking when the player does not solve a current Raiders problem.
+
+<Note>
+The model intentionally removes Fernando Mendoza from the recommendation set because he has already been selected.
+</Note>

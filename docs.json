@@ -1,0 +1,48 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Raiders Depth Fragility",
+  "colors": {
+    "primary": "#8EA3BD"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get started",
+        "pages": ["index", "quickstart"]
+      },
+      {
+        "group": "Product guide",
+        "pages": [
+          "guides/dashboard",
+          "guides/recommendations",
+          "guides/csv-import"
+        ]
+      },
+      {
+        "group": "Model",
+        "pages": [
+          "model/fragility-scoring",
+          "model/prospect-fit",
+          "model/data-confidence"
+        ]
+      },
+      {
+        "group": "Engineering",
+        "pages": [
+          "engineering/architecture",
+          "engineering/development",
+          "engineering/testing"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reference/domain-types",
+          "reference/source-map",
+          "reference/glossary"
+        ]
+      }
+    ]
+  }
+}

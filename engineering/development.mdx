@@ -1,0 +1,110 @@
+---
+title: "Development"
+description: "Local development workflow, project conventions, and safe change patterns."
+---
+
+## Local workflow
+
+```bash
+npm install
+npm run dev -- --port 3003
+```
+
+Use another port if `3003` is occupied.
+
+## Project conventions
+
+- Keep scoring deterministic.
+- Keep source references attached to every seed row.
+- Keep the dashboard current-roster only.
+- Add tests for any scoring behavior change.
+- Use Zod schemas for external or manually entered data.
+
+## Add a new prospect
+
+Edit:
+
+```text
+src/data/seed/prospects.ts
+```
+
+Add a row with:
+
+- Prospect identity.
+- Position group.
+- Projected range.
+- Consensus rank, if available.
+- NFL IQ-style signals.
+- Readiness.
+- Role-fit map.
+- Traits.
+- Source references.
+- Availability status.
+
+Then run:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+## Add a new source
+
+Edit:
+
+```text
+src/data/seed/sources.ts
+```
+
+Add a `SourceRef` entry and use it in the relevant seed row.
+
+If the underlying data has changed, update:
+
+```ts
+export const DATA_AS_OF = "YYYY-MM-DDTHH:mm:ss-05:00";
+```
+
+## Add a scoring component
+
+Change scoring in one place:
+
+```text
+src/lib/scoring/fragility.ts
+```
+
+Then add tests in:
+
+```text
+src/__tests__/scoring.test.ts
+```
+
+Do not compute new score components inside React components.
+
+## Add a UI control
+
+Use local component state inside:
+
+```text
+src/components/dashboard/draft-room-dashboard.tsx
+```
+
+Keep the control tied to existing scored view models unless the feature requires a model change. For example, filtering prospects is UI state; changing how total scores are calculated is model logic.
+
+## Update docs
+
+Mintlify pages are MDX files at the repository root and section folders.
+
+When adding a page:
+
+<Steps>
+  <Step title="Create the MDX file">
+    Use kebab-case file names and include `title` and `description` frontmatter.
+  </Step>
+  <Step title="Add it to navigation">
+    Update `docs.json` so the page appears in the sidebar.
+  </Step>
+  <Step title="Validate locally">
+    Run the Mintlify CLI preview or validation command.
+  </Step>
+</Steps>

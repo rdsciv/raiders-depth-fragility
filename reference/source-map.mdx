@@ -1,0 +1,60 @@
+---
+title: "Source map"
+description: "Public and local sources referenced by the seed data."
+---
+
+The source registry is:
+
+```text
+src/data/seed/sources.ts
+```
+
+`DATA_AS_OF` is:
+
+```text
+2026-04-24T12:55:00-05:00
+```
+
+## Source registry
+
+| Key | Purpose | URL |
+| --- | --- | --- |
+| `nflDraftInfo` | Confirms Day 2 timing | `https://www.nfl.com/draft/event-info/` |
+| `nflDraftOrder` | Confirms Raiders pick slots | `https://www.nfl.com/news/2026-nfl-draft-order-for-all-seven-rounds` |
+| `raidersMendoza` | Confirms Fernando Mendoza at No. 1 | `https://www.raiders.com/news/fernando-mendoza-no-1-overall-pick-raiders-quarterback-2026-nfl-draft-indiana-football` |
+| `raidersRoster` | Official roster identity | `https://www.raiders.com/team/players-roster/` |
+| `raidersDepthChart` | Depth chart availability warning | `https://www.raiders.com/team/depth-chart` |
+| `raidersCoaches` | Current staff context | `https://www.raiders.com/team/coaches-roster/` |
+| `nflIqLaunch` | NFL IQ product scope | `https://www.nfl.com/news/nfl-iq-launches-on-nfl-com-bringing-fans-inside-the-front-office-from-free-agency-through-the-draft/` |
+| `nflIqProspects` | NFL IQ prospect grading context | `https://www.nfl.com/news/nfl-iq-ten-under-the-radar-prospects-who-boosted-their-draft-scores-at-combine/` |
+| `nflDayTwoProspects` | Public fallback prospect pool | `https://www.nfl.com/news/2026-nfl-draft-day-2-day-3-prospects-to-watch` |
+| `autumnwindBrief` | Local Raiders analytics background | `file:///Users/chilly/Documents/Projects/autumnwind/raiders_bdb_2026_research_brief.md` |
+
+## Source usage
+
+Sources are attached at the row level:
+
+- Draft picks use draft order and team announcement sources.
+- Roster players use the official Raiders roster.
+- Depth assessments use official roster, depth-chart availability, and NFL IQ concept sources.
+- Scheme roles use staff context, NFL IQ concepts, and the local research brief.
+- Prospects use NFL IQ-style and public fallback prospect sources.
+
+## Updating source data
+
+When re-verifying:
+
+<Steps>
+  <Step title="Check live pages">
+    Confirm whether URLs still resolve and whether the described fact is still true.
+  </Step>
+  <Step title="Update notes">
+    Keep `note` fields specific enough that a future maintainer can see why the source was used.
+  </Step>
+  <Step title="Update timestamps">
+    Change `DATA_AS_OF` after a meaningful source refresh.
+  </Step>
+  <Step title="Run tests">
+    Seed parsing happens during tests, so schema drift will fail early.
+  </Step>
+</Steps>

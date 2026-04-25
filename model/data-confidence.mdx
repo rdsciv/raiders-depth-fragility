@@ -1,0 +1,78 @@
+---
+title: "Data confidence"
+description: "How the app handles official sources, inferred depth, NFL IQ concepts, and visible uncertainty."
+---
+
+The app uses public data. It must not present inferred depth or scouting assumptions as official team truth.
+
+## Source rules
+
+Every seed row carries `sourceRefs`:
+
+```ts
+type SourceRef = {
+  label: string;
+  url: string;
+  retrievedAt: string;
+  note?: string;
+};
+```
+
+The dashboard surfaces those sources in the detail panel and workbench.
+
+## Confidence score
+
+Depth assessments include:
+
+```ts
+confidence: number;
+```
+
+The UI translates that number into a chip:
+
+| Range | Label |
+| --- | --- |
+| `>= 0.60` | High confidence |
+| `>= 0.52` | Medium confidence |
+| `< 0.52` | Low confidence |
+
+## Why several positions are not high confidence
+
+The official Raiders depth chart page says the depth chart will be available in Fall 2026. Until then, the app infers likely starters and backups from roster listings, public staff context, and NFL IQ concepts.
+
+The UI calls this out directly in the confidence warnings panel.
+
+## NFL IQ handling
+
+NFL IQ is treated as the conceptual source for team needs, projected depth, scheme summaries, cap context, draft capital, and prospect signals. The current app does not scrape NFL IQ through an unsupported API.
+
+Instead:
+
+- Seed data uses public-source fallback values.
+- The CSV workbench lets a user paste NFL IQ-style prospect values.
+- Scoring remains deterministic after values enter the model.
+
+## Data update workflow
+
+When source facts change:
+
+<Steps>
+  <Step title="Update source timestamp">
+    Change `DATA_AS_OF` in `src/data/seed/sources.ts`.
+  </Step>
+  <Step title="Update source references">
+    Adjust labels, URLs, or notes in the same file.
+  </Step>
+  <Step title="Update affected seed rows">
+    Edit roster, depth, picks, or prospect data under `src/data/seed/`.
+  </Step>
+  <Step title="Run validation">
+    Run tests, lint, and build before publishing the update.
+  </Step>
+</Steps>
+
+```bash
+npm test
+npm run lint
+npm run build
+```

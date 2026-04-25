@@ -1,0 +1,73 @@
+---
+title: "Testing"
+description: "The verification commands and scenarios that protect the scoring model and current-only product invariant."
+---
+
+Verification has three layers:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+## Domain tests
+
+The test file is:
+
+```text
+src/__tests__/scoring.test.ts
+```
+
+It covers:
+
+- High-dependency starter with no matched backup ranks as highly fragile.
+- Credible C/G swing coverage lowers center fragility.
+- A lower-board prospect can outrank a better-board player when he reduces a more fragile Raiders role.
+- Fernando Mendoza is treated as already drafted.
+- Raiders Day 2 starts at pick No. 36 and includes No. 67.
+- Official depth chart absence is reflected as a confidence warning.
+- Manual CSV import validates good rows and reports malformed rows.
+- The product remains locked to current-roster mode.
+
+## Lint
+
+Run:
+
+```bash
+npm run lint
+```
+
+This uses the Next.js ESLint config generated with the app.
+
+## Build
+
+Run:
+
+```bash
+npm run build
+```
+
+The production build type-checks the App Router code and prerenders the static dashboard route.
+
+## Browser verification
+
+After visual or layout changes, run the app and check desktop and mobile widths:
+
+```bash
+npm run dev -- --port 3003
+npx playwright screenshot --full-page --viewport-size=1440,1100 http://localhost:3003 /tmp/raiders-depth-desktop.png
+npx playwright screenshot --full-page --viewport-size=390,1200 http://localhost:3003 /tmp/raiders-depth-mobile.png
+```
+
+Check that:
+
+- The first screen is the dashboard.
+- Text does not overlap.
+- The prospect table scrolls horizontally inside its panel on mobile.
+- The page itself does not force body-level horizontal overflow.
+- The recommendation panel is visible below the board on mobile.
+
+## Known audit note
+
+`npm audit --omit=dev` may report moderate issues inside Next.js nested dependencies. Do not apply `npm audit fix --force` without inspecting the proposed version changes, because npm may suggest a breaking downgrade.

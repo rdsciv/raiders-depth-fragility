@@ -1,0 +1,84 @@
+---
+title: "Quickstart"
+description: "Install, run, and verify the Raiders Depth Fragility app locally."
+---
+
+## Prerequisites
+
+- Node.js 20 through 24
+- npm
+- Git
+
+The app is a Next.js App Router project with TypeScript, Tailwind CSS, Zod, and Vitest.
+
+<Warning>
+The Mintlify CLI currently rejects Node 25+. Use the Node version in `.nvmrc` or `.node-version` when previewing or validating docs.
+</Warning>
+
+## Install dependencies
+
+From the project root:
+
+```bash
+npm install
+```
+
+## Start the dashboard
+
+```bash
+npm run dev -- --port 3003
+```
+
+Open:
+
+```text
+http://localhost:3003
+```
+
+If port `3003` is busy, use another port:
+
+```bash
+npm run dev -- --port 3004
+```
+
+## Run verification
+
+Run all core checks before treating a change as complete:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
+
+Expected result:
+
+- The domain test suite passes.
+- ESLint exits cleanly.
+- Next.js creates an optimized production build.
+
+## Preview the Mintlify docs
+
+Install or run the Mintlify CLI from the project root:
+
+```bash
+npx mint@latest dev
+```
+
+Then open the local Mintlify URL printed by the CLI.
+
+<Note>
+The Next.js app and Mintlify preview both default to web server ports. If one port is already occupied, follow the CLI prompt and use the alternate port it selects.
+</Note>
+
+## First files to inspect
+
+| Area | File |
+| --- | --- |
+| Dashboard route | `src/app/page.tsx` |
+| Interactive UI | `src/components/dashboard/draft-room-dashboard.tsx` |
+| Domain schemas | `src/types/domain.ts` |
+| Seed data | `src/data/seed/index.ts` |
+| Scoring functions | `src/lib/scoring/fragility.ts` |
+| CSV parser | `src/lib/import/prospect-csv.ts` |
+| Tests | `src/__tests__/scoring.test.ts` |

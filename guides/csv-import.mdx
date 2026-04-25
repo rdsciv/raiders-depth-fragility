@@ -1,0 +1,82 @@
+---
+title: "Import prospect data"
+description: "Use the manual CSV workbench for NFL IQ or scout-adjusted prospect values."
+---
+
+The app includes a manual CSV parser because NFL IQ values may be visible to a user without being available through a stable public API.
+
+The parser lives in:
+
+```text
+src/lib/import/prospect-csv.ts
+```
+
+## CSV template
+
+Use these headers:
+
+```csv
+name,school,position,positionGroup,projectedMin,projectedMax,consensusRank,nflIqOverall,athleticism,production,readiness,traits,sourceUrl
+```
+
+Example:
+
+```csv
+name,school,position,positionGroup,projectedMin,projectedMax,consensusRank,nflIqOverall,athleticism,production,readiness,traits,sourceUrl
+Makai Lemon,USC,WR,WR,42,72,58,83,80,82,0.72,"separator|return value",https://www.nfl.com/draft/
+```
+
+## Field reference
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `name` | string | Prospect name |
+| `school` | string | College program |
+| `position` | string | Display position, such as `CB` or `C` |
+| `positionGroup` | enum | Must be one of the supported model groups |
+| `projectedMin` | number | Earliest expected draft slot |
+| `projectedMax` | number | Latest expected draft slot |
+| `consensusRank` | number | Optional public board rank |
+| `nflIqOverall` | number | 0 to 100 NFL IQ-style signal |
+| `athleticism` | number | 0 to 100 trait signal |
+| `production` | number | 0 to 100 production signal |
+| `readiness` | number | 0 to 1 current-window readiness |
+| `traits` | string | Pipe-delimited list, such as `nickel leverage|run support` |
+| `sourceUrl` | URL | Source used for the row |
+
+## Supported position groups
+
+```text
+QB, RB, WR, TE, OT, IOL/C, EDGE, IDL, LB, CB, S, ST
+```
+
+## Validation behavior
+
+The parser uses Zod. It returns:
+
+```ts
+type ProspectImportResult = {
+  prospects: Prospect[];
+  errors: string[];
+};
+```
+
+Invalid rows do not crash the app. They produce a line-specific error and are excluded from the parsed prospect list.
+
+## Current limitation
+
+Imported prospects are previewed in the workbench. They are not yet merged into the main prospect overlay at runtime.
+
+To promote an imported prospect into the main board, add it to:
+
+```text
+src/data/seed/prospects.ts
+```
+
+Then run:
+
+```bash
+npm test
+npm run lint
+npm run build
+```
