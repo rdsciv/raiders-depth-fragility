@@ -112,6 +112,23 @@ The current test suite covers:
 - Manual CSV import validation.
 - Current-roster-only product mode.
 
+## Football research and assumptions
+
+Every dependency score, role fit, depth dropoff, and confidence rating in the seed data comes from a specific football read. The `docs/` folder makes that reasoning visible without having to launch Mintlify or trace the code:
+
+| File | What it covers |
+|---|---|
+| [`docs/football-research.md`](./docs/football-research.md) | **Start here.** Synthesizes the Raiders football knowledge that justifies every number in the seed: Kubiak coaching ground truth, scheme identity, why each scheme role gets its specific dependency score, roster strengths/weaknesses, why Mendoza is locked at #1, undervalued archetypes that drive prospect role fits, and the trade-value snapshot. |
+| [`docs/raiders-research-brief.md`](./docs/raiders-research-brief.md) | The full **Raiders Analytics Advantage Brief** (April 20, 2026, 673 lines). The deeper research artifact behind `football-research.md`, including BDB landscape, NFL analytics state of the art, Raiders org chart, scheme identity, cap context, undervalued archetypes, and a 90-day plan. Cited throughout the in-tool source trail as `sources.autumnwindBrief`. |
+| [`docs/scheme-assumptions.md`](./docs/scheme-assumptions.md) | The 12 scheme roles with their per-role dependency/leverage/scarcity numbers, failure modes, cross-training cushions, and the conditions under which the assumptions break (e.g. staff change, Crosby trade, Bowers trade). |
+| [`docs/data-sources.md`](./docs/data-sources.md) | Every source in `src/data/seed/sources.ts` with confidence level. The Raiders depth-chart gap (not live until Fall 2026) and how the model compensates. |
+| [`docs/methodology.md`](./docs/methodology.md) | Scoring math: fragility weights, fit-score formula, availability buckets, opportunity cost, where to adjust each constant. |
+| [`docs/scouting-process.md`](./docs/scouting-process.md) | How prospect grades are derived, the prospect schema, and the CSV import workbench format. |
+| [`docs/draft-state.md`](./docs/draft-state.md) | Picks made, picks upcoming, focus-window mechanics, and the procedure for updating after each Raiders selection. |
+| [`docs/glossary.md`](./docs/glossary.md) | Plain-English definitions of every score and term, with score-range cheat sheets. |
+
+If a number in the UI looks wrong, [`docs/football-research.md`](./docs/football-research.md) → [`docs/scheme-assumptions.md`](./docs/scheme-assumptions.md) → the cited section of [`docs/raiders-research-brief.md`](./docs/raiders-research-brief.md) is the trace path.
+
 ## Mintlify docs
 
 Preview the docs:
