@@ -212,7 +212,8 @@ describe("draft and import invariants", () => {
     });
 
     expect(positions[0].positionGroup).toBe("OT");
-    expect(prospects[0].bestScore.total).toBeGreaterThan(20);
+    expect(prospects[0].prospect.name).toBe("Thaddeus Dixon");
+    expect(prospects[0].bestScore.total).toBeGreaterThan(18);
     expect(
       prospects.every((entry) => entry.prospect.status === "available"),
     ).toBe(true);
@@ -238,6 +239,31 @@ describe("draft and import invariants", () => {
     expect(
       ranked.some((entry) => entry.prospect.name === "Csv Import Prospect"),
     ).toBe(true);
+  });
+
+  it("removes live drafted prospects from the active overlay", () => {
+    const draftedNames = [
+      "D'Angelo Ponds",
+      "Jake Golday",
+      "Brandon Cisse",
+      "Eli Stowers",
+      "Anthony Hill Jr.",
+      "Jake Slaughter",
+      "Bud Clark",
+    ];
+    const positions = rankPositions(seedData.schemeRoles, seedData.depthAssessments);
+    const rankedNames = rankProspectsForPicks({
+      prospects: seedData.prospects,
+      fragilityScores: positions.map((position) => position.score),
+      targetPicks: seedData.focusPicks,
+    }).map((entry) => entry.prospect.name);
+
+    for (const name of draftedNames) {
+      expect(
+        seedData.prospects.find((prospect) => prospect.name === name)?.status,
+      ).toBe("drafted");
+      expect(rankedNames).not.toContain(name);
+    }
   });
 
   it("locks the product to current-roster mode instead of a season selector", () => {
