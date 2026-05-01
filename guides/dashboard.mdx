@@ -12,7 +12,7 @@ The header shows the operating context:
 - The data timestamp.
 - The `Current roster only` invariant.
 - The already-made Raiders picks.
-- The active decision window for the next live Raiders picks.
+- Whether the active draft window is open or complete.
 
 If those facts change, update the seed files in `src/data/seed/` and rerun verification.
 
@@ -63,9 +63,11 @@ The recommendation panel gives four views of the same scored prospect set:
 
 Use this panel to start the conversation. Use the prospect table to inspect the math.
 
+When the draft is complete, these cards intentionally show empty-state copy because there are no remaining pick-specific FRV calculations.
+
 ## Prospect overlay
 
-The prospect overlay compares available prospects at each focus pick.
+The prospect overlay compares available prospects at each focus pick while picks remain.
 
 Each row shows:
 
@@ -77,6 +79,8 @@ Each row shows:
 - Trait tags.
 
 Use the pick filter to see the recommendation set for a specific pick. Use the minimum FRV slider to hide low-impact prospects.
+
+After the draft, the overlay pauses and the dashboard shifts to post-draft roster fragility.
 
 ## Data workbench
 

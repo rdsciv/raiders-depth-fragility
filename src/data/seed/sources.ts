@@ -1,6 +1,6 @@
 import type { SourceRef } from "@/types/domain";
 
-export const DATA_AS_OF = "2026-04-25T02:32:16-05:00";
+export const DATA_AS_OF = "2026-04-30T21:50:14-05:00";
 
 export const sources = {
   nflDraftInfo: {
@@ -19,7 +19,7 @@ export const sources = {
     label: "NFL Raiders draft tracker",
     url: "https://www.nfl.com/draft/tracker/2026/teams/las-vegas-raiders",
     retrievedAt: DATA_AS_OF,
-    note: "Live Raiders tracker verified picks made at Nos. 1, 38, 67, and 91, with No. 102 next.",
+    note: "Live Raiders tracker verified the complete 10-player 2026 draft class.",
   },
   raidersMendoza: {
     label: "Raiders Fernando Mendoza selection",
@@ -68,6 +68,12 @@ export const sources = {
     url: "https://www.nfl.com/draft/tracker/2026/prospects/all_all?collegeClass=all&page=1&status=undrafted",
     retrievedAt: DATA_AS_OF,
     note: "Live NFL prospect tracker filtered to undrafted players after Rounds 1-3.",
+  },
+  raidersUdfaSignings: {
+    label: "Raiders 2026 UDFA signings",
+    url: "https://www.raiders.com/news/raiders-sign-17-undrafted-free-agents-2026-nfl-transactions",
+    retrievedAt: DATA_AS_OF,
+    note: "Raiders announced 17 undrafted free-agent signings on April 30, 2026.",
   },
   autumnwindBrief: {
     label: "Raiders analytics brief",

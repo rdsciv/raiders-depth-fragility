@@ -20,6 +20,7 @@ import type {
   FragilityScore,
   PositionGroup,
   Prospect,
+  RosterPlayer,
   SourceRef,
 } from "@/types/domain";
 
@@ -27,6 +28,7 @@ type DraftRoomDashboardProps = {
   dataAsOf: string;
   noSeasonMode: boolean;
   positions: RankedPosition[];
+  rosterPlayers: RosterPlayer[];
   seedProspects: Prospect[];
   fragilityScores: FragilityScore[];
   focusPicks: DraftPick[];
@@ -124,6 +126,7 @@ export function DraftRoomDashboard({
   dataAsOf,
   noSeasonMode,
   positions,
+  rosterPlayers,
   seedProspects,
   fragilityScores,
   focusPicks,
@@ -155,6 +158,21 @@ export function DraftRoomDashboard({
         .sort((a, b) => (a.draftedOverall ?? 999) - (b.draftedOverall ?? 999)),
     [seedProspects],
   );
+  const rosterAdditions = useMemo(
+    () =>
+      rosterPlayers
+        .filter((player) => player.acquisition === "draft" || player.acquisition === "udfa")
+        .sort((a, b) => {
+          if (a.acquisition !== b.acquisition) {
+            return a.acquisition === "draft" ? -1 : 1;
+          }
+
+          return a.positionGroup.localeCompare(b.positionGroup) || a.name.localeCompare(b.name);
+        }),
+    [rosterPlayers],
+  );
+  const draftedAdditions = rosterAdditions.filter((player) => player.acquisition === "draft");
+  const udfaAdditions = rosterAdditions.filter((player) => player.acquisition === "udfa");
 
   const prospects = useMemo(
     () =>
@@ -214,53 +232,59 @@ export function DraftRoomDashboard({
   ];
 
   return (
-    <main className="min-h-[100dvh] bg-[#0f1115] text-[#e7ecf3]">
-      <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-5 px-4 py-4 sm:px-6 lg:px-8">
+    <main className="min-h-[100dvh] bg-[#1f2228] text-white">
+      <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
         <header className="grid min-w-0 gap-4 border-b border-white/10 pb-4 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#9aa6b7]">
+            <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">
               <span>Las Vegas draft room</span>
-              <span className="h-1 w-1 bg-[#8ea3bd]" />
+              <span className="h-1 w-1 bg-white/50" />
               <span>Data as of {dataAsOf}</span>
               {noSeasonMode ? (
-                <span className="border border-[#8ea3bd]/40 px-2 py-1 text-[#cbd5e1]">
+                <span className="border border-white/20 px-2 py-1 text-white">
                   Current roster only
                 </span>
               ) : null}
             </div>
-            <h1 className="mt-3 max-w-5xl text-3xl font-semibold tracking-tight text-white md:text-5xl">
+            <h1 className="mt-4 max-w-5xl font-mono text-5xl font-light leading-none text-white md:text-7xl xl:text-8xl">
               Depth Fragility Board
             </h1>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#aab4c2]">
+            <p className="mt-4 max-w-3xl text-base leading-7 text-white/70">
               Ranks current Raiders position groups by how fast the game plan breaks when a
-              starter is lost, then maps available prospects to the fragility they reduce.
+              starter is lost, then recalculates the post-draft roster after every signed addition.
             </p>
           </div>
           <div className="grid min-w-0 gap-2 border border-white/10 bg-white/[0.03] p-3 sm:grid-cols-2">
             <div>
-              <div className="text-[11px] uppercase tracking-[0.18em] text-[#8f9baa]">
+              <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">
                 Already locked
               </div>
               {madePicks.map((pick) => (
                 <div key={pick.overall} className="mt-2 text-sm text-white">
-                  <span className="font-mono text-[#8ea3bd]">#{pick.overall}</span>{" "}
+                  <span className="font-mono text-white/70">#{pick.overall}</span>{" "}
                   {pick.selection}
                 </div>
               ))}
             </div>
             <div>
-              <div className="text-[11px] uppercase tracking-[0.18em] text-[#8f9baa]">
+              <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">
                 Decision window
               </div>
               <div className="mt-2 flex flex-wrap gap-2">
-                {focusPicks.map((pick) => (
-                  <span
-                    key={pick.overall}
-                    className="border border-white/10 px-2 py-1 font-mono text-sm text-white"
-                  >
-                    R{pick.round} #{pick.overall}
+                {focusPicks.length > 0 ? (
+                  focusPicks.map((pick) => (
+                    <span
+                      key={pick.overall}
+                      className="border border-white/20 px-2 py-1 font-mono text-sm text-white"
+                    >
+                      R{pick.round} #{pick.overall}
+                    </span>
+                  ))
+                ) : (
+                  <span className="border border-white/20 px-2 py-1 font-mono text-sm uppercase tracking-[0.14em] text-white/70">
+                    Draft complete
                   </span>
-                ))}
+                )}
               </div>
             </div>
           </div>
@@ -494,54 +518,61 @@ export function DraftRoomDashboard({
               </div>
             </div>
             <div className="min-w-0 overflow-x-auto">
-              <table className="w-full min-w-[820px] border-collapse text-left text-sm">
-                <thead className="border-b border-white/10 text-[11px] uppercase tracking-[0.16em] text-[#8f9baa]">
-                  <tr>
-                    <th className="px-4 py-3 font-medium">Prospect</th>
-                    <th className="px-4 py-3 font-medium">Fit</th>
-                    {focusPicks.map((pick) => (
-                      <th key={pick.overall} className="px-4 py-3 font-medium">
-                        #{pick.overall}
-                      </th>
-                    ))}
-                    <th className="px-4 py-3 font-medium">Traits</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {rankedProspects.map((entry) => (
-                    <tr key={entry.prospect.name} className="align-top hover:bg-white/[0.03]">
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-white">{entry.prospect.name}</div>
-                        <div className="text-xs text-[#8f9baa]">
-                          {entry.prospect.position}, {entry.prospect.school}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="font-mono text-white">
-                          {Math.round(entry.bestScore.roleFit * 100)}
-                        </div>
-                        <div className="text-[10px] uppercase tracking-[0.16em] text-[#7f8b9a]">
-                          {entry.prospect.positionGroup}
-                        </div>
-                      </td>
+              {focusPicks.length > 0 ? (
+                <table className="w-full min-w-[820px] border-collapse text-left text-sm">
+                  <thead className="border-b border-white/10 font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">
+                    <tr>
+                      <th className="px-4 py-3 font-normal">Prospect</th>
+                      <th className="px-4 py-3 font-normal">Fit</th>
                       {focusPicks.map((pick) => (
-                        <td key={`${entry.prospect.name}-${pick.overall}`} className="px-4 py-3">
-                          <PickScoreCell prospect={entry} pick={pick} />
-                        </td>
+                        <th key={pick.overall} className="px-4 py-3 font-normal">
+                          #{pick.overall}
+                        </th>
                       ))}
-                      <td className="px-4 py-3">
-                        <div className="flex max-w-[320px] flex-wrap gap-1">
-                          {entry.prospect.traits.slice(0, 4).map((trait) => (
-                            <span key={trait} className="border border-white/10 px-2 py-1 text-xs">
-                              {trait}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
+                      <th className="px-4 py-3 font-normal">Traits</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-white/10">
+                    {rankedProspects.map((entry) => (
+                      <tr key={entry.prospect.name} className="align-top hover:bg-white/[0.03]">
+                        <td className="px-4 py-3">
+                          <div className="font-medium text-white">{entry.prospect.name}</div>
+                          <div className="text-xs text-white/50">
+                            {entry.prospect.position}, {entry.prospect.school}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="font-mono text-white">
+                            {Math.round(entry.bestScore.roleFit * 100)}
+                          </div>
+                          <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/30">
+                            {entry.prospect.positionGroup}
+                          </div>
+                        </td>
+                        {focusPicks.map((pick) => (
+                          <td key={`${entry.prospect.name}-${pick.overall}`} className="px-4 py-3">
+                            <PickScoreCell prospect={entry} pick={pick} />
+                          </td>
+                        ))}
+                        <td className="px-4 py-3">
+                          <div className="flex max-w-[320px] flex-wrap gap-1">
+                            {entry.prospect.traits.slice(0, 4).map((trait) => (
+                              <span key={trait} className="border border-white/10 px-2 py-1 text-xs">
+                                {trait}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="p-6 text-sm leading-6 text-white/70">
+                  The 2026 Raiders draft is complete, so prospect FRV is paused. The board now
+                  runs roster fragility against the signed draft class and UDFA additions below.
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -580,6 +611,48 @@ export function DraftRoomDashboard({
                 </span>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="border border-white/10 bg-white/[0.03]">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
+            <div>
+              <div className="font-mono text-sm font-normal uppercase tracking-[0.14em]">
+                Post-Draft Roster Additions
+              </div>
+              <div className="mt-1 text-xs text-white/50">
+                {draftedAdditions.length} drafted rookies, {udfaAdditions.length} UDFAs
+              </div>
+            </div>
+            <div className="font-mono text-xs uppercase tracking-[0.14em] text-white/50">
+              roster inputs for fragility
+            </div>
+          </div>
+          <div className="grid gap-4 p-4 lg:grid-cols-2">
+            {(["draft", "udfa"] as const).map((acquisition) => {
+              const players = acquisition === "draft" ? draftedAdditions : udfaAdditions;
+
+              return (
+                <div key={acquisition} className="border border-white/10">
+                  <div className="border-b border-white/10 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">
+                    {acquisition === "draft" ? "Draft class" : "Undrafted free agents"}
+                  </div>
+                  <div className="grid divide-y divide-white/10">
+                    {players.map((player) => (
+                      <div key={player.name} className="grid grid-cols-[72px_1fr] gap-3 px-3 py-2 text-sm">
+                        <div className="font-mono text-white/70">{player.positionGroup}</div>
+                        <div>
+                          <div className="text-white">{player.name}</div>
+                          <div className="text-xs text-white/50">
+                            {player.position}, {player.college}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -649,9 +722,13 @@ export function DraftRoomDashboard({
                   </div>
                 ) : (
                   <div className="mt-2 border border-[#8ea3bd]/30 px-3 py-2 text-sm text-[#dce3eb]">
-                    {csvResult.prospects.length === 1
-                      ? "1 prospect row merged into the rankings above."
-                      : `${csvResult.prospects.length} prospect rows merged into the rankings above.`}
+                    {focusPicks.length === 0
+                      ? `${csvResult.prospects.length} prospect row${
+                          csvResult.prospects.length === 1 ? "" : "s"
+                        } valid. Prospect FRV is paused because the draft window is closed.`
+                      : csvResult.prospects.length === 1
+                        ? "1 prospect row merged into the rankings above."
+                        : `${csvResult.prospects.length} prospect rows merged into the rankings above.`}
                   </div>
                 )}
                 <div className="mt-4 text-[11px] uppercase tracking-[0.18em] text-[#8f9baa]">

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f1115;
-  --foreground: #e7ecf3;
+  --background: #1f2228;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -35,6 +35,6 @@ textarea {
 }
 
 ::selection {
-  background: #8ea3bd;
-  color: #111318;
+  background: #ffffff;
+  color: #1f2228;
 }

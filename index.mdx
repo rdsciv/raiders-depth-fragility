@@ -22,18 +22,19 @@ The app produces two linked rankings.
     Ranks QB, RB, WR, TE, OT, IOL/C, EDGE, IDL, LB, CB, S, and ST by scheme dependency, depth dropoff, starter leverage, replacement scarcity, and cross-training cushion.
   </Card>
   <Card title="Prospect fit" icon="target" href="/model/prospect-fit">
-    Scores available prospects at the next live Raiders picks by how much they reduce the team's highest practical fragility.
+    Scores available prospects when a live pick window exists, then pauses once the draft is complete.
   </Card>
 </Columns>
 
 ## Current facts encoded in the build
 
-The seed data is timestamped at `2026-04-25T02:32:16-05:00` and uses public source references embedded in every row.
+The seed data is timestamped at `2026-04-30T21:50:14-05:00` and uses public source references embedded in every row.
 
 - Day 2 of the 2026 NFL Draft was April 24, 2026.
 - Fernando Mendoza is treated as already drafted by Las Vegas at No. 1 overall.
-- Treydan Stukes, Keyron Crawford, and Trey Zuhn III are treated as already drafted by Las Vegas.
-- The active decision window starts at the next live Raiders pick, currently No. 102.
+- The full 10-player Raiders draft class is treated as already drafted.
+- The active draft window is closed, so prospect FRV is paused until a new acquisition window is modeled.
+- The official 17-player Raiders UDFA class from April 30, 2026 is included in roster depth.
 - The official Raiders depth chart is unavailable until Fall 2026, so depth order is inferred and shown with confidence warnings.
 - NFL IQ is treated as the primary conceptual source, with a manual CSV path for values that are visible to a user but not available through a stable public API.
 

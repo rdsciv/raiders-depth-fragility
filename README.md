@@ -29,7 +29,8 @@ The central question is:
 ## Product constraints
 
 - Fernando Mendoza is treated as already drafted by Las Vegas at No. 1 overall.
-- The active decision window starts at the next live Raiders pick, currently No. 102, after made picks at Nos. 1, 38, 67, and 91.
+- The 2026 Raiders draft class is complete: 10 made picks, no remaining live pick window.
+- The 17-player UDFA class announced by the Raiders on April 30, 2026 is included as roster depth.
 - The official Raiders depth chart is unavailable until Fall 2026, so depth order is inferred and clearly marked with confidence warnings.
 - NFL IQ is used as the primary conceptual source, but the app does not depend on an unsupported NFL IQ API.
 - `NO_SEASON_MODE` is an explicit code and test invariant.
@@ -106,8 +107,8 @@ The current test suite covers:
 - High-dependency starter fragility.
 - Center fragility reduction from C/G swing coverage.
 - Lower-board prospects outranking higher-board prospects when they reduce higher Raiders fragility.
-- Mendoza, Stukes, Crawford, and Zuhn already being drafted by Las Vegas.
-- The live Raiders board starting with upcoming picks No. 102, No. 134, and No. 175.
+- Complete Raiders draft class and closed post-draft pick window.
+- Official 17-player UDFA class being included in roster depth.
 - Official depth chart absence producing confidence warnings.
 - Manual CSV import validation.
 - Current-roster-only product mode.

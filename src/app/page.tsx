@@ -12,6 +12,7 @@ export default function Home() {
       dataAsOf={seedData.dataAsOf}
       noSeasonMode={NO_SEASON_MODE}
       positions={rankedPositions}
+      rosterPlayers={seedData.rosterPlayers}
       seedProspects={seedData.prospects}
       fragilityScores={fragilityScores}
       focusPicks={seedData.focusPicks}

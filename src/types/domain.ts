@@ -36,6 +36,7 @@ export const rosterPlayerSchema = z.object({
   age: z.number().int().positive().nullable(),
   experience: z.string().min(1),
   college: z.string().min(1),
+  acquisition: z.enum(["veteran", "draft", "udfa"]).optional(),
   sourceRefs: z.array(sourceRefSchema).min(1),
 });
 

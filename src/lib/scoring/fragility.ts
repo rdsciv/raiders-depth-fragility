@@ -192,9 +192,7 @@ export function rankProspectsForPicks({
   targetPicks: DraftPick[];
 }): RankedProspect[] {
   if (targetPicks.length === 0) {
-    throw new Error(
-      "rankProspectsForPicks requires at least one pick in targetPicks to compute a bestScore.",
-    );
+    return [];
   }
 
   return prospects

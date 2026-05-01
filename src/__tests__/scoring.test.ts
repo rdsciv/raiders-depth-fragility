@@ -136,7 +136,7 @@ describe("fragility scoring", () => {
 });
 
 describe("draft and import invariants", () => {
-  it("treats made Raiders picks as drafted and starts the live window at pick 102", () => {
+  it("treats the complete Raiders draft class as made and closes the live pick window", () => {
     const mendoza = seedData.prospects.find((entry) => entry.name === "Fernando Mendoza");
     const stukes = seedData.prospects.find((entry) => entry.name === "Treydan Stukes");
     const crawford = seedData.prospects.find((entry) => entry.name === "Keyron Crawford");
@@ -151,9 +151,33 @@ describe("draft and import invariants", () => {
     expect(crawford?.draftedOverall).toBe(67);
     expect(zuhn?.draftedOverall).toBe(91);
     expect(availabilityAtPick(mendoza!, 102)).toBe(0);
-    expect(made).toEqual([1, 38, 67, 91]);
-    expect(upcoming[0]).toBe(102);
-    expect(upcoming).toContain(134);
+    expect(made).toEqual([1, 38, 67, 91, 101, 122, 150, 175, 195, 229]);
+    expect(upcoming).toEqual([]);
+  });
+
+  it("includes the official 17-player UDFA class as roster additions", () => {
+    const udfas = seedData.rosterPlayers.filter((player) => player.acquisition === "udfa");
+
+    expect(udfas).toHaveLength(17);
+    expect(udfas.map((player) => player.name)).toEqual([
+      "Jacob Clark",
+      "Roman Hemby",
+      "Chase Roberts",
+      "Corey Rucker",
+      "E.J. Williams Jr.",
+      "Matt Lauter",
+      "Isaiah Jatta",
+      "Justin Pickett",
+      "Cian Slone",
+      "Gary Smith III",
+      "Xavian Sorey Jr.",
+      "Chris Thomas",
+      "Caleb Offord",
+      "Devin Lafayette",
+      "Tanner Wall",
+      "Tyler Duzansky",
+      "Kansei Matsuzawa",
+    ]);
   });
 
   it("shows official depth chart absence as a source confidence warning", () => {
@@ -190,8 +214,8 @@ describe("draft and import invariants", () => {
     expect(result.errors[0]).toContain("sourceUrl");
   });
 
-  it("rankProspectsForPicks throws when targetPicks is empty instead of returning prospects with undefined bestScore", () => {
-    expect(() =>
+  it("returns an empty prospect overlay after the draft is complete", () => {
+    expect(
       rankProspectsForPicks({
         prospects: seedData.prospects,
         fragilityScores: rankPositions(
@@ -200,7 +224,7 @@ describe("draft and import invariants", () => {
         ).map((position) => position.score),
         targetPicks: [],
       }),
-    ).toThrow(/targetPicks/);
+    ).toEqual([]);
   });
 
   it("keeps rankings deterministic from seed data", () => {
@@ -211,12 +235,9 @@ describe("draft and import invariants", () => {
       targetPicks: seedData.focusPicks,
     });
 
-    expect(positions[0].positionGroup).toBe("OT");
-    expect(prospects[0].prospect.name).toBe("Thaddeus Dixon");
-    expect(prospects[0].bestScore.total).toBeGreaterThan(18);
-    expect(
-      prospects.every((entry) => entry.prospect.status === "available"),
-    ).toBe(true);
+    expect(positions[0].positionGroup).toBe("EDGE");
+    expect(positions[1].positionGroup).toBe("LB");
+    expect(prospects).toHaveLength(0);
   });
 
   it("surfaces parsed CSV prospects in rankProspectsForPicks output alongside seed prospects", () => {
@@ -233,7 +254,16 @@ describe("draft and import invariants", () => {
     const ranked = rankProspectsForPicks({
       prospects: [...seedData.prospects, ...imported.prospects],
       fragilityScores,
-      targetPicks: seedData.focusPicks,
+      targetPicks: [
+        {
+          overall: 260,
+          round: 7,
+          pickInRound: 44,
+          team: "Las Vegas Raiders",
+          status: "upcoming",
+          sourceRefs: [source],
+        },
+      ],
     });
 
     expect(
@@ -255,7 +285,16 @@ describe("draft and import invariants", () => {
     const rankedNames = rankProspectsForPicks({
       prospects: seedData.prospects,
       fragilityScores: positions.map((position) => position.score),
-      targetPicks: seedData.focusPicks,
+      targetPicks: [
+        {
+          overall: 260,
+          round: 7,
+          pickInRound: 44,
+          team: "Las Vegas Raiders",
+          status: "upcoming",
+          sourceRefs: [source],
+        },
+      ],
     }).map((entry) => entry.prospect.name);
 
     for (const name of draftedNames) {
@@ -268,7 +307,7 @@ describe("draft and import invariants", () => {
 
   it("locks the product to current-roster mode instead of a season selector", () => {
     expect(NO_SEASON_MODE).toBe(true);
-    expect(seedData.focusPicks.every((pick) => pick.status === "upcoming")).toBe(true);
+    expect(seedData.focusPicks).toHaveLength(0);
   });
 });
 
